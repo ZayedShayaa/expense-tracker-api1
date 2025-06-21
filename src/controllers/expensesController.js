@@ -14,6 +14,7 @@ exports.createExpense = async (req, res, next) => {
   }
 };
 
+// Controller for fetching expenses with optional filters
 exports.getExpenses = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, category, from, to } = req.query;

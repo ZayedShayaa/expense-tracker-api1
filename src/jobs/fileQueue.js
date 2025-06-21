@@ -6,7 +6,7 @@ const fileQueue = new Queue("file-processing", {
 
 module.exports = fileQueue;
 
-// Queue لإرسال الإيميلات
-const emailQueue = new Queue("email-queue", {
-  redis: { host: "127.0.0.1", port: 6379 },
-});
+// // Create a new Bull queue for email jobs
+// const emailQueue = new Queue("email-queue", {
+//   redis: { host: "127.0.0.1", port: 6379 },
+// });

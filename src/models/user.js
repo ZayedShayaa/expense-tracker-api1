@@ -1,7 +1,7 @@
-const sequelize = require("../config/connect");
+const sequelize_connect = require("../config/connect");
 const { DataTypes } = require("sequelize");
 
-const User = sequelize.define(
+const User = sequelize_connect.define(
   "User",
   {
     email: {

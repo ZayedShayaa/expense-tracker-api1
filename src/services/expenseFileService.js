@@ -19,7 +19,7 @@ exports.uploadFile = async ({ expenseId, filename, filePath }) => {
 };
 
 exports.getFileById = async (expenseId, fileId, userId) => {
-  // تأكد أولاً أن المصروف يخص المستخدم الحالي
+  // validate that the expense belongs to the user
   const expense = await Expense.findOne({
     where: { id: expenseId, user_id: userId },
   });

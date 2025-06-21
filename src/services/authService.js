@@ -4,7 +4,7 @@ const { User } = require("../models");
 require("dotenv").config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1d";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN ;
 
 async function registerUser({ email, name, password }) {
   //hashed password

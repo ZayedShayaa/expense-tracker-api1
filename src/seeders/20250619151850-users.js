@@ -8,7 +8,7 @@ module.exports = {
       {
         email: 'user1@example.com',
         name: 'User One',
-        password_hash: bcrypt.hashSync('password123', 10), // التشفير هنا
+        password_hash: bcrypt.hashSync('password123', 10), 
         created_at: new Date(),
         updated_at: new Date(),
       },

@@ -1,6 +1,7 @@
 require("dotenv").config();           
 const nodemailer = require("nodemailer");
 
+// Create a Nodemailer transporter using SMTP settings from environment variables
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,        
   port: Number(process.env.SMTP_PORT), 
@@ -14,6 +15,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// EmailService class to handle sending emails
 class EmailService {
   async sendEmail(to, subject, text, attachments = []) {
     const mailOptions = {

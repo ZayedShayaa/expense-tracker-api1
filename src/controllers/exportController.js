@@ -2,6 +2,7 @@ const exportService = require("../services/exportService");
 const { addEmailJob } = require("../jobs/emailQueue");
 const path = require("path");
 
+// This controller handles exporting expenses to a CSV file and optionally sending it via email
 exports.exportExpenses = async (req, res, next) => {
   try {
     const { from, to, sendEmail } = req.query;

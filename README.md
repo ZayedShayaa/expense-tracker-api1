@@ -33,13 +33,13 @@ npx sequelize-cli init
 
 Creates: `models/`, `migrations/`, `seeders/`, `config/config.json`
 
-### 3. Generate Models & Migrations
+### 3. Generate Migrations Only
 
 ```bash
-npx sequelize-cli model:generate --name User --attributes email:string,name:string,password_hash:string
-npx sequelize-cli model:generate --name Expense --attributes user_id:integer,amount:decimal,category:string,description:text,incurred_at:date
-npx sequelize-cli model:generate --name ExpenseFile --attributes expense_id:integer,filename:string,file_url:string
-npx sequelize-cli model:generate --name MonthlySummary --attributes user_id:integer,month:date,total_amount:decimal,category_data:json
+npx sequelize-cli migration:generate --name create-users-table
+npx sequelize-cli migration:generate --name create-expenses-table
+npx sequelize-cli migration:generate --name create-expense-files-table
+
 ```
 
 ### 4. Run Migrations
@@ -51,8 +51,9 @@ npx sequelize-cli db:migrate
 ### 5. Seed the Database (optional)
 
 ```bash
-npx sequelize-cli seed:generate --name seed-users
-npx sequelize-cli seed:generate --name seed-expenses
+npx sequelize-cli seed:generate --name users
+npx sequelize-cli seed:generate --name expenses
+npx sequelize-cli seed:generate --name expense-files
 npx sequelize-cli db:seed:all
 ```
 
@@ -84,9 +85,9 @@ expense-tracker-api/
 │   ├── routes/           # Express routers
 │   ├── middlewares/      # Auth, error handling, validations
 │   ├── jobs/             # Queue producers & workers
+│   │   ├── emailQueue.js
 │   │   ├── fileQueue.js
-│   │   └── fileWorker.js
-│   ├── utils/            # Helper functions & ApiError class
+│   │   └── fileWorker.js           # Helper functions & ApiError class
 │   ├── validations/      # Joi schemas
 │   ├── exports/          # Generated CSV files
 │   └── tests/            # Unit tests

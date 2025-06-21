@@ -1,5 +1,6 @@
 const AnalyticsService = require("../services/analyticsService");
 
+// Controller for handling analytics-related requests
 exports.getMonthlyExpenses = async (req, res, next) => {
   try {
     const data = await AnalyticsService.getMonthlyExpenses(req.user.id);
@@ -10,6 +11,7 @@ exports.getMonthlyExpenses = async (req, res, next) => {
 };
 
 
+// Controller for handling category analytics requests
 exports.getCategoryAnalytics = async (req, res, next) => {
   try {
     const { from, to } = req.query;

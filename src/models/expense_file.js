@@ -1,7 +1,7 @@
-const sequelize = require("../config/connect");
+const sequelize_connect = require("../config/connect");
 const { DataTypes } = require("sequelize");
 
-  const ExpenseFile = sequelize.define('ExpenseFile', {
+  const ExpenseFile = sequelize_connect.define('ExpenseFile', {
     expense_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -14,11 +14,7 @@ const { DataTypes } = require("sequelize");
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // uploaded_at: {
-    //   type: DataTypes.DATE,
-    //   allowNull: false,
-    //   defaultValue: DataTypes.NOW,
-    // },
+    
   }, {
     tableName: 'expense_files',
     timestamps: true,

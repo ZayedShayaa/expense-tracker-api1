@@ -1,6 +1,7 @@
 const { Expense } = require("../models");
 const { Op, fn, col,Sequelize } = require("sequelize");
 
+// This service provides analytics related to expenses, such as monthly totals and category breakdowns.
 exports.getMonthlyExpenses = async (userId) => {
   const expenses = await Expense.findAll({
     attributes: [
@@ -24,7 +25,7 @@ exports.getMonthlyExpenses = async (userId) => {
 };
 
 
-
+// This function retrieves analytics for expenses by category within a specified date range.
 exports.getCategoryAnalytics = async (userId, from, to) => {
   const where = {
     user_id: userId,

@@ -1,5 +1,6 @@
 const authService = require('../services/authService');
 
+// This controller handles user registration and login
 async function register(req, res) {
   try {
     const { email, name, password } = req.body;
