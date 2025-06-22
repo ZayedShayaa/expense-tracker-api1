@@ -48,9 +48,14 @@ exports.updateExpense = async (req, res, next) => {
 
 exports.deleteExpense = async (req, res, next) => {
   try {
-    await ExpenseService.deleteExpense(req.params.id, req.user.id);
-    res.status(204).send(); // No Content
+    const deleted = await ExpenseService.deleteExpense(
+      req.params.id,
+      req.user.id
+    );
+
+    res.status(200).json(deleted);
   } catch (err) {
+  
     next(err);
   }
 };

@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
- require("dotenv").config();
+require("dotenv").config();
 
 // Create Sequelize instance with PostgreSQL connection
 const sequelize = new Sequelize({
@@ -10,8 +10,8 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
 
- logging: process.env.NODE_ENV === 'development' ? console.log : false,
-   // Automatically adds created_at, updated_at, and deleted_at columns to all models
+  logging: process.env.NODE_ENV === "development" ? console.log : false,
+  // Automatically adds created_at, updated_at, and deleted_at columns to all models
   define: {
     timestamps: true,
     underscored: true,
@@ -23,9 +23,10 @@ const sequelize = new Sequelize({
 
 async function testConnection() {
   try {
-    await sequelize.authenticate();  // returns a Promise that: resolves if successfulor rejects if fails with an error
-
-    console.log(" Database connection successfully");
+    await sequelize.authenticate(); // returns a Promise that: resolves if successfulor rejects if fails with an error
+    if (process.env.NODE_ENV !== "test") {
+      console.log(" Database connection successfully");
+    }
   } catch (error) {
     console.error(" Failed to connected", error.message);
     process.exit(1); // Exit application on connection failure

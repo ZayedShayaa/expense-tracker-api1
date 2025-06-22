@@ -21,7 +21,8 @@ A RESTful API for managing personal expenses, with file uploads, email notificat
 npm init -y
 npm install dotenv express pg
 npm install --save-dev sequelize-cli
-npm install joi bcrypt jsonwebtoken multer nodemailer fast-csv bull ioredis nodemon
+npm install joi bcrypt jsonwebtoken multer nodemailer fast-csv bull ioredis nodemon 
+npm install swagger-ui-express
 ```
 ````
 
@@ -87,13 +88,14 @@ expense-tracker-api/
 │   ├── jobs/             # Queue producers & workers
 │   │   ├── emailQueue.js
 │   │   ├── fileQueue.js
-│   │   └── fileWorker.js           # Helper functions & ApiError class
+│   │   └── Worker.js           # Helper functions & ApiError class
 │   ├── validations/      # Joi schemas
 │   ├── exports/          # Generated CSV files
 │   └── tests/            # Unit tests
 ├── uploads/              # Uploaded files
 ├── .env                  # Environment variables
 ├── package.json
+├── swagger.json
 └── README.md
 ```
 
@@ -106,7 +108,7 @@ We use **Bull** + **Redis** for background processing (e.g., file processing, em
 ### Run queue processor independently:
 
 ```bash
-node src/services/queue_service.js
+npm run worker
 ```
 
 ---
@@ -155,7 +157,7 @@ SMTP_FROM=no-reply@expensetracker.com
 ### Run all tests:
 
 ```bash
-npx jest
+npm run test
 ```
 
 ### Run tests with coverage:

@@ -1,0 +1,566 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Expense Tracker API",
+    "version": "1.0.0",
+    "description": "API documentation "
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/",
+      "description": "Local "
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register a new user",
+        "description": "Create a new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "zayed shayaa"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "zayed@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful"
+          },
+          "400": {
+            "description": "Invalid input data"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User login",
+        "description": "Authenticate user and return token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "zayed@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid credentials"
+          }
+        }
+      }
+    },
+    "/api/expenses": {
+      "get": {
+        "tags": [
+          "Expenses"
+        ],
+        "summary": "Get all expenses",
+        "description": "Retrieve a list of expenses. Requires authorization.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "required": false
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items per page",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of expenses returned successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Expenses"
+        ],
+        "summary": "Create a new expense",
+        "description": "Add a new expense. Requires authorization.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "category",
+                  "description",
+                  "incurred_at"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 250.00
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Transport"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Taxi to client meeting"
+                  },
+                  "incurred_at": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-18"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Expense created successfully"
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token"
+          }
+        }
+      }
+    },
+    "/api/expenses/{id}": {
+      "patch": {
+        "tags": [
+          "Expenses"
+        ],
+        "summary": "Update an expense",
+        "description": "Update fields of a specific expense by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the expense",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 200
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Dinner"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "Transport"
+                  },
+                  "incurred_at": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2025-06-18"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Expense updated successfully"
+          },
+          "400": {
+            "description": "Invalid input data"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Expense not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Expenses"
+        ],
+        "summary": "Delete an expense",
+        "description": "Delete a specific expense by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the expense",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 5
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": " deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Expense not found"
+          }
+        }
+      }
+    },
+    "/api/expenses/{id}/files": {
+      "post": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Upload files for an expense",
+        "description": "Upload one or more files related to a specific expense",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the expense",
+            "schema": {
+              "type": "integer",
+              "example": 4
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Files uploaded successfully"
+          },
+          "400": {
+            "description": "Invalid input or no files uploaded"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token"
+          }
+        }
+      }
+    },
+    "/api/expenses/{expenseId}/files/{fileId}": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Download a specific expense file",
+        "description": "Download a file associated with a specific expense. Requires authorization.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "expenseId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the expense",
+            "schema": {
+              "type": "integer",
+              "example": 4
+            }
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the file to download",
+            "schema": {
+              "type": "integer",
+              "example": 8
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File downloaded successfully",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/api/analytics/monthly": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Get monthly expense analytics",
+        "description": "Returns total expenses grouped by month. Requires authentication.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Monthly analytics retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token"
+          }
+        }
+      }
+    },
+    "/api/analytics/categories": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Get category-wise expense analytics",
+        "description": "Returns total expenses grouped by category between two dates. Requires authentication.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "Start date for analytics (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-06-01"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "End date for analytics (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-06-30"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category-wise analytics retrieved successfully"
+          },
+          "400": {
+            "description": "Invalid or missing query parameters"
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token"
+          }
+        }
+      }
+    },
+    "/api/exports/csv": {
+      "get": {
+        "tags": [
+          "Exports"
+        ],
+        "summary": "Export expenses to CSV",
+        "description": "Export user's expenses between two dates as CSV. Set `sendEmail=true` to receive it via email.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "description": "Start date (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-06-18"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "description": "End date (YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2025-06-20"
+            }
+          },
+          {
+            "name": "sendEmail",
+            "in": "query",
+            "required": false,
+            "description": "Set to true to send the CSV via email",
+            "schema": {
+              "type": "boolean",
+              "example": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV file generated successfully or sent via email"
+          },
+           "201": {
+            "description": "CSV file will be generated  or sent via email"
+          },
+          "400": {
+            "description": "Missing or invalid date parameters"
+          },
+          "401": {
+            "description": "Unauthorized - Token required"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

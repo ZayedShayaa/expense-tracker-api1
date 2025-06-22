@@ -15,22 +15,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// EmailService class to handle sending emails
-class EmailService {
-  async sendEmail(to, subject, text, attachments = []) {
-    const mailOptions = {
-      from: `"Expense Tracker" <${process.env.SMTP_FROM}>`,
-      to,
-      subject,
-      text,
-      attachments,
-    };
+// 
+async function sendEmail(to, subject, text, attachments = []) {
+  const mailOptions = {
+    from: `"Expense Tracker" <${process.env.SMTP_FROM}>`,
+    to,
+    subject,
+    text,
+    attachments,
+  };
 
-    console.log(`📬 [EmailService] Sending via ${process.env.SMTP_HOST}:${process.env.SMTP_PORT}`);
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`📬 [EmailService] Sent ${info.messageId} to ${to}`);
-    return info;
-  }
+  console.log(`[EmailService] Sending via ${process.env.SMTP_HOST}:${process.env.SMTP_PORT}`);
+  const info = await transporter.sendMail(mailOptions);
+  console.log(`[EmailService] Sent ${info.messageId} to ${to}`);
+  return info;
 }
 
-module.exports = new EmailService();
+module.exports = sendEmail;

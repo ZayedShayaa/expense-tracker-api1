@@ -4,15 +4,25 @@ const authRoutes = require("./routes/auth");
 const expenseRoutes = require("./routes/expenses");
 const expenseFileRoutes = require("./routes/expenseFiles");
 const exportRouter = require("./routes/export");
-app.use("/api/export", exportRouter);
-app.use(express.json());
+const swaggerDocument = require("../swagger.json");
+// const { swaggerUi, swaggerSpec } = require('../src/config/swagger');
 const analyticsRoutes = require("./routes/analytics");
-app.use("/api/analytics", analyticsRoutes);
+const { serve, setup } = require('swagger-ui-express'); 
+
+
+app.use(express.json());
+
+
+// app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/auth", authRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/export", exportRouter);
 app.use("/api/expenses/:id/files", expenseFileRoutes);
 app.use("/api/exports", exportRouter);
+
+app.use('/docs', serve, setup(swaggerDocument));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

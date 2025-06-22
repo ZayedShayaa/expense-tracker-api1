@@ -20,7 +20,7 @@ exports.exportExpenses = async (req, res, next) => {
     if (sendEmail === "true") {
       await addEmailJob({
         to: email,
-        subject: "📊 Your Expense CSV Report",
+        subject: "Your Expense CSV Report",
         text: "Please find your CSV expense report attached.",
         attachments: [{ filename: fileName, path: filePath }],
       });

@@ -1,4 +1,5 @@
-const { Expense } = require("../models");
+const e = require("express");
+const { ExpenseFile, Expense } = require("../models");
 const { Op } = require("sequelize");
 
 // Helper function to fetch a single expense
@@ -35,10 +36,18 @@ exports.getExpenses = async (
     where,
     limit,
     offset,
+    distinct: true,
     order: [["incurred_at", "DESC"]],
+    include: [
+      {
+        model: ExpenseFile,
+        as: "files", // Alias for the association
+        attributes: ["id", "filename"],
+      },
+    ],
   });
 
-  return { total: count, page, pageSize: limit, expenses: rows };
+  return { total: count, expenses: rows };
 };
 
 // Update an existing expense using getExpenseById helper
@@ -50,5 +59,7 @@ exports.updateExpense = async (expenseId, userId, expenseData) => {
 // Delete an expense by marking it as deleted
 exports.deleteExpense = async (expenseId, userId) => {
   const expense = await getExpenseById(expenseId, userId);
-  return await expense.update({ deleted_at: new Date() });
+  await expense.destroy();
+  
+  return expense;
 };

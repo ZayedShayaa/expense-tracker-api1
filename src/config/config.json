@@ -10,7 +10,7 @@
   "test": {
     "username": "postgres",
     "password": "chatapp",
-    "database": "expense_teacker1_test",
+    "database": "testt",
     "host": "localhost",
     "port": 5432,
     "dialect": "postgres"
