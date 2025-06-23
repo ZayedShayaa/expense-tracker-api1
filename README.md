@@ -235,44 +235,141 @@ GET /api/export/csv?from=2025-01-01&to=2025-06-18&email=test@mailtrap.io
 
 ---
 
-## Docker Compose (optional)
+## 🐳 Docker Compose (Optional for Deployment)
+
+We use **Docker** + **Docker Compose** to easily run the full app (API, DB, Redis, Worker) in isolated containers.
+
+### 🔧 docker-compose.yml
 
 ```yaml
-version: "3"
+version: "3.8"
+
 services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
   db:
     image: postgres:15
+    restart: always
     environment:
-      POSTGRES_DB: expense_tracker
+      POSTGRES_DB: testt
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: chatapp
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+
   api:
     build: .
-    environment:
-      DB_NAME: expense_tracker
-      DB_USER: postgres
-      DB_PASS: password
-      DB_HOST: db
-      DB_PORT: 5432
+    command: node src/app.js # Main API Server
     ports:
       - "3000:3000"
+    volumes:
+      - ./src/uploads:/app/uploads
+      - ./src/exports:/app/src/exports
+    environment:
+      DB_NAME: testt
+      DB_USER: postgres
+      DB_PASS: chatapp
+      DB_HOST: db
+      DB_PORT: 5432
+      JWT_SECRET: aVeryStrongAndLongRandomStringForJWTAndSessionSecret
+      NODE_ENV: development
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SMTP_HOST: sandbox.smtp.mailtrap.io
+      SMTP_PORT: 2525
+      SMTP_USER: f7e68a48494d1b
+      SMTP_PASS: 478e9ea62c5fc0
+      SMTP_FROM: expensetrackerapp@example.com
+      SMTP_SECURE: "false"
     depends_on:
       - db
+      - redis
+
+  worker:
+    build: .
+    command: node src/jobs/worker.js # Background Job Processor
+    volumes:
+      - ./src/uploads:/app/uploads
+      - ./src/exports:/app/src/exports
+    environment:
+      DB_NAME: testt
+      DB_USER: postgres
+      DB_PASS: chatapp
+      DB_HOST: db
+      DB_PORT: 5432
+      NODE_ENV: development
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SMTP_HOST: sandbox.smtp.mailtrap.io
+      SMTP_PORT: 2525
+      SMTP_USER: f7e68a48494d1b
+      SMTP_PASS: 478e9ea62c5fc0
+      SMTP_FROM: expensetrackerapp@example.com
+      SMTP_SECURE: "false"
+    depends_on:
+      - db
+      - redis
+
 volumes:
   db_data:
 ```
 
-Run with:
+---
+
+###  Run the application
 
 ```bash
-docker-compose up --build
+docker compose up --build
+```
+
+Runs:
+- API on http://localhost:3000
+- PostgreSQL on port 5432
+- Redis on port 6379
+- Worker to handle background jobs
+
+> Press `Ctrl + C` to stop the running containers in the current terminal.
+
+---
+
+### 🧹 Stop & Clean
+
+```bash
+docker compose down
+```
+
+Removes containers and network, but **preserves volume data** (PostgreSQL data).
+
+---
+
+### 🛠️ Migrate inside container (if needed)
+
+If Sequelize migrations fail automatically or you prefer to run them manually:
+
+```bash
+docker exec -it expense-tracke-api-1 sh
+npx sequelize-cli db:migrate --config src/config/config.json --migrations-path src/migrations
 ```
 
 ---
+
+### 🔁 Test the Worker manually (optional)
+
+If you want to simulate the job runner manually inside the container:
+
+```bash
+docker exec -it expense-tracke-api-1 sh
+npm run worker
+```
+
+---
+
+> Make sure the file `src/jobs/worker.js` exists and exports the email & file queues properly, otherwise the worker container will crash.
 
 ## Dev Log
 
