@@ -11,7 +11,7 @@
     "username": "postgres",
     "password": "chatapp",
     "database": "testt",
-    "host": "localhost",
+    "host": "db",
     "port": 5432,
     "dialect": "postgres"
   },
@@ -19,7 +19,7 @@
     "username": "postgres",
     "password": "chatapp",
     "database": "expense_teacker1_prod",
-    "host": "localhost",
+    "host": "db",
     "port": 5432,
     "dialect": "postgres"
   }

@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: testt
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: chatapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    command: node src/app.js # ✅ السيرفر الرئيسي
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/uploads:/app/uploads
+    environment:
+      DB_NAME: testt
+      DB_USER: postgres
+      DB_PASS: chatapp
+      DB_HOST: db
+      DB_PORT: 5432
+      JWT_SECRET: aVeryStrongAndLongRandomStringForJWTAndSessionSecret
+      NODE_ENV: development
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SMTP_HOST: sandbox.smtp.mailtrap.io
+      SMTP_PORT: 2525
+      SMTP_USER: f7e68a48494d1b
+      SMTP_PASS: 478e9ea62c5fc0
+      SMTP_FROM: expensetrackerapp@example.com
+      SMTP_SECURE: "false"
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    build: .
+    command: node src/jobs/worker.js
+    volumes:
+      - ./src/uploads:/app/uploads
+    environment:
+      DB_NAME: testt
+      DB_USER: postgres
+      DB_PASS: chatapp
+      DB_HOST: db
+      DB_PORT: 5432
+      NODE_ENV: development
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SMTP_HOST: sandbox.smtp.mailtrap.io
+      SMTP_PORT: 2525
+      SMTP_USER: f7e68a48494d1b
+      SMTP_PASS: 478e9ea62c5fc0
+      SMTP_FROM: expensetrackerapp@example.com
+      SMTP_SECURE: "false"
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  db_data:

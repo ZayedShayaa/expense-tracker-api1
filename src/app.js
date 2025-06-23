@@ -8,7 +8,7 @@ const swaggerDocument = require("../swagger.json");
 // const { swaggerUi, swaggerSpec } = require('../src/config/swagger');
 const analyticsRoutes = require("./routes/analytics");
 const { serve, setup } = require('swagger-ui-express'); 
-
+require("./jobs/Worker"); 
 
 app.use(express.json());
 
